@@ -16,5 +16,11 @@
     "url": "https://github.com/PhilippAubert/Expense-Tracker-API/issues"
   },
   "homepage": "https://github.com/PhilippAubert/Expense-Tracker-API#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.11"
+  }
 }
