@@ -4,14 +4,31 @@ export const errorHandler = (
     error: any,
     _req: Request,
     res: Response,
-    next:NextFunction
+    next: NextFunction
 ) => {
     try {
         res.status(error.statusCode || 500).json({
-            success:false, 
-            error:error.message || "Server Error"
+            success: false,
+            error: error.message || "Server Error"
         });
-    } catch(e) {
+    } catch (e) {
         next(e);
     }
-}
+};
+
+export const isDuplicateError = (error: any): boolean => {
+    return error?.code === "ER_DUP_ENTRY";
+};
+
+export const getDuplicateMessage = (error: any): string => {
+    const msg = error?.sqlMessage || "";
+
+    if (msg.includes("users.username")) {
+        return "Username already exists.";
+    }
+    if (msg.includes("users.email")) {
+        return "Email already registered.";
+    }
+
+    return "Duplicate value exists.";
+};

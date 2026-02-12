@@ -4,20 +4,29 @@ import type {
     NextFunction 
 } from "express";
 
-import { registerUser } from "../db/users.js";
 
-export const signup = async (req:Request, res:Response, __next:NextFunction) => {
-    const {name, email, password} = req.body;
-    const result = await registerUser(name, email, password);
-    console.log(result);
-    if (result) {
-        res.status(200).json({"success":true})
+
+import { registerUser } from "../db/users.js";
+import { AppError, hashPw } from "../utils/authUtils.js";
+import { getDuplicateMessage, isDuplicateError } from "../middleware/errorHandler.js";
+
+
+export const signup = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+        const { name, email, password } = req.body;
+        const hashedPw = await hashPw(password);
+        const result = await registerUser(name, email, hashedPw);
+        if (result) {
+            return res.status(201).json({ success: true });
+        }
+    } catch (error) {
+        if (isDuplicateError(error)) {
+            return next(new AppError(getDuplicateMessage(error), 409));
+        }
+        return next(error);
     }
-/*     try {
-    } catch(e){
-        console.error(e);
-    } */
-}
+};
+
 
 /* export const signin = async (req:Request, res:Response, next:NextFunction) => {}
 
