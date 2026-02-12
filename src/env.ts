@@ -2,12 +2,16 @@ import { config } from "dotenv";
 
 config();
 
-export const {
-    PORT, 
-    JWT_SECRET,
-    JWT_EXPIRES_IN,
-    DB_NAME,
-    DB_HOST,
-    DB_USER,
-    DB_PASS
-} = process.env;
+const requireEnv = (name: string, value: string | undefined): string => {
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
+export const PORT = requireEnv("PORT", process.env["PORT"]);
+export const JWT_SECRET = requireEnv("JWT_SECRET", process.env["JWT_SECRET"]);
+export const JWT_EXPIRES_IN = requireEnv("JWT_EXPIRES_IN", process.env["JWT_EXPIRES_IN"]);
+export const DB_NAME = requireEnv("DB_NAME", process.env["DB_NAME"]);
+export const DB_HOST = requireEnv("DB_HOST", process.env["DB_HOST"]);
+export const DB_USER = requireEnv("DB_USER", process.env["DB_USER"]);

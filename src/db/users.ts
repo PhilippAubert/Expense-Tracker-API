@@ -5,7 +5,6 @@ import { pool } from "./connection.js";
 
 export const registerUser = async (name:string, email:string, password:string):Promise<ResultSetHeader | null> => {
     const [loginData] = await pool.query<ResultSetHeader>(`INSERT INTO users (username, email, password) VALUES (?, ?, ?)`, [name, email, password]);
-    console.log(loginData);
     return loginData;
 };
 

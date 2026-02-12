@@ -1,10 +1,13 @@
+import jwt from "jsonwebtoken";
+import { type StringValue } from "ms";
+
 import type { 
     Request, 
     Response, 
     NextFunction 
 } from "express";
 
-
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../env.js";
 
 import { registerUser } from "../db/users.js";
 import { AppError, hashPw } from "../utils/authUtils.js";
@@ -17,7 +20,8 @@ export const signup = async (req:Request, res:Response, next:NextFunction) => {
         const hashedPw = await hashPw(password);
         const result = await registerUser(name, email, hashedPw);
         if (result) {
-            return res.status(201).json({ success: true });
+            const token = jwt.sign({userId:result.insertId}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN  as unknown as StringValue})
+            return res.status(201).json({ success: true, token });
         }
     } catch (error) {
         if (isDuplicateError(error)) {
