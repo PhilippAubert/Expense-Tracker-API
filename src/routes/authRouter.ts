@@ -1,6 +1,7 @@
 import express from "express";
 
-import { signup } from "../controllers/authController.js";
+import { signin, signup } from "../controllers/authController.js";
+import { signupValidator } from "../middleware/signupValidation.js";
 
 export const authRouter = express.Router();
 
@@ -9,8 +10,8 @@ authRouter.route("/").get((req, res) => {
     res.json("this is the login route!");
 });
 
-authRouter.route("/signup").post(signup);
-/* authRouter.route("/sigin").post(signin);
-authRouter.route("/signout").post(signout); */
+authRouter.route("/signup").post(signupValidator, signup);
+authRouter.route("/signin").post(signin);
+/*authRouter.route("/signout").post(signout); */
 
 export default authRouter;
