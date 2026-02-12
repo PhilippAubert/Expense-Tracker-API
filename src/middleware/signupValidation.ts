@@ -1,7 +1,8 @@
-import { body } from "express-validator";
+import { body, type ValidationChain } from "express-validator";
+import type { Request, Response, NextFunction } from "express";
 import { validate } from "./validate.js";
 
-export const signupValidator = [
+export const signupValidator:(ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
     body("name")
         .trim()
         .notEmpty().withMessage("Username is required"),
