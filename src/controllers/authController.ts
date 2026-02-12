@@ -6,25 +6,27 @@ import type {
     Response, 
     NextFunction 
 } from "express";
+
 import { type StringValue } from "ms";
 
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../env.js";
-
 import { getUserByEmail, registerUser } from "../db/userQueries.js";
-import { hashPw } from "../utils/authUtils.js";
+
 import { parseDBError } from "../middleware/dbErrorHandler.js";
 import { AppError } from "../middleware/errorHandler.js";
+import { hashPw } from "../utils/authUtils.js";
+
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../env.js";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, email, password } = req.body;
         const hashedPw = await hashPw(password);
-        const result = await registerUser(name, email, hashedPw);
-        if (result) {
-            const token = jwt.sign({ userId: result.insertId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as unknown as StringValue });
+        const createdUser = await registerUser(name, email, hashedPw);
+        if (createdUser) {
+            const token = jwt.sign({ userId: createdUser.insertId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as unknown as StringValue });
             return res.status(201).json({
                 success: true,
-                user: `User with id ${result.insertId} created`,
+                user: `User with id ${createdUser.insertId} created`,
                 token
             });
         }
