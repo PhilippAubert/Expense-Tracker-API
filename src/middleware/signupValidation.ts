@@ -16,3 +16,14 @@ export const signupValidator:(ValidationChain | ((req: Request, res: Response, n
         .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
     validate
 ];
+
+export const signinValidator:(ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
+    body("email")
+        .trim()
+        .notEmpty().withMessage("Email is required").isEmail(),
+    body("password")
+        .trim()
+        .notEmpty().withMessage("Password is required"),
+    validate
+];
+  
