@@ -10,7 +10,7 @@ authRouter.route("/").get((req, res) => {
     res.json("this is the login route!");
 });
 
-authRouter.route("/signup").post(signupValidator, signup);
+authRouter.route("/signup").post(signupValidator as any, signup);
 authRouter.route("/signin").post(signin);
 /*authRouter.route("/signout").post(signout); */
 

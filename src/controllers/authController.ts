@@ -11,24 +11,24 @@ import { JWT_EXPIRES_IN, JWT_SECRET } from "../env.js";
 
 import { registerUser } from "../db/userQueries.js";
 import { hashPw } from "../utils/authUtils.js";
-import { AppError, getDuplicateMessage, isDuplicateError } from "../middleware/errorHandler.js";
+import { parseDBError } from "../middleware/dbErrorHandler.js";
 
-
-export const signup = async (req:Request, res:Response, next:NextFunction) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, email, password } = req.body;
         const hashedPw = await hashPw(password);
         const result = await registerUser(name, email, hashedPw);
         if (result) {
-            const token = jwt.sign({userId:result.insertId}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN  as unknown as StringValue})
-            return res
-                .status(201)
-                .json({ success: true, user: `User with id ${result.insertId} created`, token });
+            const token = jwt.sign({ userId: result.insertId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as unknown as StringValue });
+            return res.status(201).json({
+                success: true,
+                user: `User with id ${result.insertId} created`,
+                token
+            });
         }
     } catch (error) {
-        if (isDuplicateError(error)) {
-            return next(new AppError(getDuplicateMessage(error), 409));
-        }
+        const dbError = parseDBError(error);
+        if (dbError) return next(dbError);
         return next(error);
     }
 };

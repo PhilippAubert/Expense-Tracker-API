@@ -15,3 +15,5 @@ export const JWT_EXPIRES_IN = requireEnv("JWT_EXPIRES_IN", process.env["JWT_EXPI
 export const DB_NAME = requireEnv("DB_NAME", process.env["DB_NAME"]);
 export const DB_HOST = requireEnv("DB_HOST", process.env["DB_HOST"]);
 export const DB_USER = requireEnv("DB_USER", process.env["DB_USER"]);
+export const TEST_TOKEN = requireEnv("TEST_TOKEN", process.env["TEST_TOKEN"]);
+export const TEST_ID = requireEnv("TEST_TOKEN", process.env["TEST_ID"]);
