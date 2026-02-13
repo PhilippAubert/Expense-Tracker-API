@@ -26,6 +26,12 @@ export const getUserById = async (id:number):Promise<User | null> => {
     return user[0];
 }
 
+export const getAllUsers = async ():Promise<User[] | undefined> => {
+    const [users] = await pool.query<User[]>("SELECT * FROM users");
+    if(!users) return;
+    return users;
+}
+
 export const updateToken = async (refreshToken: string | null, expiry: Date | null, userId: number): Promise<boolean> => {
     const [result] = await pool.query<ResultSetHeader>(
         "UPDATE users SET refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?",

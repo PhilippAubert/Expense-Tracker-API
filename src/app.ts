@@ -3,9 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { PORT } from "./env.js";
+
 import { authRouter } from "./routes/authRouter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { authorize } from "./middleware/authorize.js";
+import { getAll } from "./controllers/userController.js";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 app.use("/", authRouter);
+app.use("/users", authorize, getAll);
 app.use("/sometestroute", authorize);
 app.use(errorHandler);
+
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));

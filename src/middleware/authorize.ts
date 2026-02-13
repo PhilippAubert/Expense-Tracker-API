@@ -7,7 +7,7 @@ import { AppError } from "./errorHandler.js";
 import { JWT_SECRET } from "../env.js";
 import { getUserById } from "../db/userQueries.js";
 
-export const authorize = async (req:Request, res:Response, next:NextFunction) => {
+export const authorize = async (req:Request, _res:Response, next:NextFunction) => {
     try {
         let token; 
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
@@ -18,7 +18,7 @@ export const authorize = async (req:Request, res:Response, next:NextFunction) =>
         const user = await getUserById(decoded.userId);
         if (!user) throw new AppError("Unauthorized", 401);
         req.user = user;
-        res.status(200).json({message: "this works!"});
+        next();
     } catch (e) {
         return next(e);
     }
