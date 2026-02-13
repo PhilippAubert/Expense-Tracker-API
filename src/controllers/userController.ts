@@ -7,7 +7,7 @@ import type {
 import { 
     getAllUsers, 
     getUserById 
-} from "../db/userQueries.js";
+} from "../db/queries/userQueries.js";
 
 import { parseDBError } from "../middleware/dbErrorHandler.js";
 import { AppError } from "../middleware/errorHandler.js";

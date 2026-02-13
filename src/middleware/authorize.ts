@@ -5,7 +5,7 @@ import type { JwtUserPayload } from "../types/userType.js";
 
 import { AppError } from "./errorHandler.js";
 import { JWT_SECRET } from "../env.js";
-import { getUserById } from "../db/userQueries.js";
+import { getUserById } from "../db/queries/userQueries.js";
 
 export const authorize = async (req:Request, _res:Response, next:NextFunction) => {
     try {

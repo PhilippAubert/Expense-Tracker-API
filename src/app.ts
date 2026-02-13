@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
+//REDIRECT IN DEN AUTH-ROUTER! LOGIN _> 
 app.use("/", authRouter);
 app.use("/users", authorize, userRouter);
 app.use(errorHandler);
