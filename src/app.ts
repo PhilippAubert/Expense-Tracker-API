@@ -20,7 +20,6 @@ app.use(cors());
 
 app.use("/", authRouter);
 app.use("/users", authorize, userRouter);
-app.use("/sometestroute", authorize);
 app.use(errorHandler);
 
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));

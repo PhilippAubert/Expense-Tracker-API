@@ -4,9 +4,13 @@ import type {
     NextFunction 
 } from "express";
 
-import { getAllUsers, getUserById } from "../db/userQueries.js";
+import { 
+    getAllUsers, 
+    getUserById 
+} from "../db/userQueries.js";
 
 import { parseDBError } from "../middleware/dbErrorHandler.js";
+import { AppError } from "../middleware/errorHandler.js";
 
 export const getAll = async (_req:Request, res:Response, next:NextFunction) => {
     try {
@@ -24,6 +28,7 @@ export const getAll = async (_req:Request, res:Response, next:NextFunction) => {
 export const getOneUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {id} = req.params;
+        if (id != req.user.id) throw new AppError("Forbidden", 403);
         const user = await getUserById(Number(id));
         return res.status(200).json({
             user: user

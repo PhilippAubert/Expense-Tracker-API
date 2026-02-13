@@ -1,21 +1,21 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import type { 
-    Request, 
-    Response, 
-    NextFunction 
+    Request,
+    Response,
+    NextFunction
 } from "express";
 
-import { type StringValue } from "ms";
 
-import { getUserByEmail, registerUser } from "../db/userQueries.js";
+import { 
+    getUserByEmail, 
+    registerUser 
+} from "../db/userQueries.js";
 
 import { parseDBError } from "../middleware/dbErrorHandler.js";
 import { AppError } from "../middleware/errorHandler.js";
-import { hashPw } from "../utils/authUtils.js";
+import { generateToken, hashPw } from "../utils/authUtils.js";
 
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../env.js";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -23,7 +23,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         const hashedPw = await hashPw(password);
         const createdUser = await registerUser(name, email, hashedPw);
         if (createdUser) {
-            const token = jwt.sign({ userId: createdUser.insertId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as unknown as StringValue });
+            const token = generateToken(createdUser.insertId);
             return res.status(201).json({
                 success: true,
                 user: `User with id ${createdUser.insertId} created`,
@@ -50,7 +50,7 @@ export const signin = async (req:Request, res:Response, next:NextFunction) => {
             throw new AppError("Invalid password", 401);
         }
                 
-        const token = jwt.sign({userId: user.id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN as unknown as StringValue});
+        const token = generateToken(user.id);
             return res.status(200)
                 .json({ success:true, message: "User signed in successfully", data :{ token, user}});
     } catch (error) {
