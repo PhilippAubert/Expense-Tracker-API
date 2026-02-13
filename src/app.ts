@@ -7,7 +7,7 @@ import { PORT } from "./env.js";
 import { authRouter } from "./routes/authRouter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { authorize } from "./middleware/authorize.js";
-import { getAll } from "./controllers/userController.js";
+import userRouter from "./routes/userRouter.js";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 app.use("/", authRouter);
-app.use("/users", authorize, getAll);
+app.use("/users", authorize, userRouter);
 app.use("/sometestroute", authorize);
 app.use(errorHandler);
 
