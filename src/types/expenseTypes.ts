@@ -26,4 +26,5 @@ export type CreateExpenseInput = Omit<Expense,
     "id" | 
     "createdAt" | 
     "updatedAt" | 
-    "userId">;
+    "userId"
+>;

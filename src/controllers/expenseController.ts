@@ -1,9 +1,20 @@
-import type { Request, Response, NextFunction } from "express";
+import type { 
+    Request, 
+    Response, 
+    NextFunction 
+} from "express";
 
-import { parseDBError } from "../middleware/dbErrorHandler.js";
-import { addExpenseToDb, deleteExpenseFromDb, getAllExpenses, getExpenseById, updateExpenseToDb } from "../db/queries/expenseQueries.js";
 import type { JwtUserPayload } from "../types/userTypes.js";
 
+import { 
+    addExpenseToDb, 
+    deleteExpenseFromDb, 
+    getAllExpenses, 
+    getExpenseById, 
+    updateExpenseToDb 
+} from "../db/queries/expenseQueries.js";
+
+import { parseDBError } from "../middleware/dbErrorHandler.js";
 
 export const listExpenses = async (req:Request, res:Response, next:NextFunction) => {
     try {
@@ -29,6 +40,7 @@ export const getOneExpense = async (req:Request, res: Response, next:NextFunctio
         return next(e);
     }
 }
+
 export const addExpense = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.user as JwtUserPayload; 
@@ -50,7 +62,6 @@ export const deleteExpense = async (req:Request, res: Response, next:NextFunctio
     try {
         const {id} = req.params;
         const {userId} = req.user as JwtUserPayload; 
-
         const deletedExpense = await deleteExpenseFromDb(Number(id), userId)
         res.status(204).json(`${deletedExpense} deleted!`);
     } catch (e) {

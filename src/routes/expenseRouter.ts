@@ -4,11 +4,9 @@ import { deleteExpense, listExpenses, getOneExpense, updateExpense, addExpense }
 
 export const expenseRouter = express.Router();
 
-expenseRouter.route("/all")
-    .get(listExpenses);
+expenseRouter.route("/all").get(listExpenses);
 
-expenseRouter.route("/add").
-    post(addExpense);
+expenseRouter.route("/add").post(addExpense);
 
 expenseRouter.route("/:id")
     .get(getOneExpense)
