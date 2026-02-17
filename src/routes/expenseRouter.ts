@@ -1,18 +1,18 @@
 import express from "express";
-import { deleteExpense, getAllExpenses, getExpenseById, updateExpense, addExpense } from "../controllers/expenseController.js";
+import { deleteExpense, listExpenses, getOneExpense, updateExpense, addExpense } from "../controllers/expenseController.js";
 
 
 export const expenseRouter = express.Router();
 
 expenseRouter.route("/all")
-    .get(getAllExpenses);
+    .get(listExpenses);
 
 expenseRouter.route("/add").
-    post(addExpense)
+    post(addExpense);
 
 expenseRouter.route("/:id")
-    .get(getExpenseById)
+    .get(getOneExpense)
     .delete(deleteExpense)
-    .put(updateExpense)
+    .put(updateExpense);
 
 export default expenseRouter;

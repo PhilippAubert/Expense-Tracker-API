@@ -1,10 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 
 import { parseDBError } from "../middleware/dbErrorHandler.js";
+import { addExpenseToDb, deleteExpenseFromDb, getAllExpenses, getExpenseById, updateExpenseToDb } from "../db/queries/expenseQueries.js";
+import type { JwtUserPayload } from "../types/userTypes.js";
 
-export const getAllExpenses = async (_req:Request, res:Response, next:NextFunction) => {
+
+export const listExpenses = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        res.status(200).json("it worked!")
+        const userId = req.user?.id;
+        const allExpenses = await getAllExpenses(userId);
+        res.status(200).json({"expenses": allExpenses});
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);
@@ -12,21 +17,28 @@ export const getAllExpenses = async (_req:Request, res:Response, next:NextFuncti
     }
 }
 
-export const getExpenseById = async (req:Request, res: Response, next:NextFunction) => {
+export const getOneExpense = async (req:Request, res: Response, next:NextFunction) => {
     try {
         const {id} = req.params;
-        res.status(200).json({"id": id});
+        const userId = req.user?.id;
+        const expense = await getExpenseById(Number(id), userId);
+        res.status(200).json({"expense": expense});
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);
         return next(e);
     }
 }
-
-export const addExpense = async (req:Request, res: Response, next:NextFunction) => {
+export const addExpense = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {body} = req;
-        res.status(201).json(body)
+        const user = req.user as JwtUserPayload; 
+        const userId = user.userId;
+        const insertId = await addExpenseToDb(userId, req.body);
+        res.status(201).json({
+            id: insertId,
+            userId,
+            ...req.body
+        });
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);
@@ -37,7 +49,10 @@ export const addExpense = async (req:Request, res: Response, next:NextFunction) 
 export const deleteExpense = async (req:Request, res: Response, next:NextFunction) => {
     try {
         const {id} = req.params;
-        res.status(204).json(`${id} deleted!`)
+        const {userId} = req.user as JwtUserPayload; 
+
+        const deletedExpense = await deleteExpenseFromDb(Number(id), userId)
+        res.status(204).json(`${deletedExpense} deleted!`);
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);
@@ -48,8 +63,10 @@ export const deleteExpense = async (req:Request, res: Response, next:NextFunctio
 export const updateExpense = async (req:Request, res: Response, next:NextFunction) => {
     try {
         const { id } = req.params;
+        const { userId } = req.user as JwtUserPayload; 
         const { body } = req.body;
-        res.status(201).json({"id": id, "value": body})
+        const updatedExpense = updateExpenseToDb(Number(id), userId, body);
+        res.status(201).json({"updated": updatedExpense});
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);

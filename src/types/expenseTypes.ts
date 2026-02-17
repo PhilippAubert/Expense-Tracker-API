@@ -21,3 +21,9 @@ enum Category {
     Clothing = "clothing",
     Others = "others"
 }
+
+export type CreateExpenseInput = Omit<Expense, 
+    "id" | 
+    "createdAt" | 
+    "updatedAt" | 
+    "userId">;
