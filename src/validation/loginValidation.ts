@@ -3,7 +3,6 @@ import { body, validationResult, type ValidationChain } from "express-validator"
 
 import { AppError } from "../middleware/errorHandler.js";
 
-
 export const validate = (req: Request, _res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

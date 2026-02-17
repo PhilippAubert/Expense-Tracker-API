@@ -1,4 +1,8 @@
-import type { ResultSetHeader, RowDataPacket } from "mysql2";
+import type { 
+    ResultSetHeader, 
+    RowDataPacket 
+} from "mysql2";
+
 import type { User } from "../../types/userType.js";
 
 import { pool } from "../connection.js";

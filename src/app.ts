@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import { PORT } from "./env.js";
 
@@ -16,9 +17,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 app.use(cors());
 
-//REDIRECT IN DEN AUTH-ROUTER! LOGIN _> 
 app.use("/", authRouter);
 app.use("/users", authorize, userRouter);
 app.use(errorHandler);

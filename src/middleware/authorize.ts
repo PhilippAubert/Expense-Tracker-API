@@ -3,23 +3,29 @@ import jwt from "jsonwebtoken"
 import type { Request, Response, NextFunction } from "express";
 import type { JwtUserPayload } from "../types/userType.js";
 
-import { AppError } from "./errorHandler.js";
 import { JWT_SECRET } from "../env.js";
+import { AppError } from "./errorHandler.js";
 import { getUserById } from "../db/queries/userQueries.js";
 
-export const authorize = async (req:Request, _res:Response, next:NextFunction) => {
+export const authorize = async (req: Request, _res: Response, next: NextFunction) => {
     try {
-        let token; 
-        if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-            token = req.headers.authorization.split(" ")[1];
+        const token = req.cookies?.["accessToken"];
+
+        if (!token) {
+            throw new AppError("No Token found", 401);
         }
-        if(!token) throw new AppError("Unauthorized!", 401);
+
         const decoded = jwt.verify(token, JWT_SECRET) as JwtUserPayload;
         const user = await getUserById(decoded.userId);
-        if (!user) throw new AppError("Unauthorized", 401);
+        
+        if (!user) {
+            throw new AppError("User not found", 401);
+        }
+        
         req.user = user;
         next();
     } catch (e) {
-        return next(e);
+        return next(new AppError("Unauthorized", 401));
     }
 }
+
