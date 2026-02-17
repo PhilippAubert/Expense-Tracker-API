@@ -17,3 +17,8 @@ export const generateToken = (id: number) => {
 export const generateRefreshToken = (id: number) => {
     return jwt.sign({userId: id}, JWT_SECRET_REFRESH, {expiresIn: JWT_EXPIRES_IN as unknown as StringValue});
 }
+
+export const cookieOptions = {
+    httpOnly: true,
+    sameSite: "strict" as const,
+};

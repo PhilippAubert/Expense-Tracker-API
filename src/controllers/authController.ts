@@ -17,15 +17,12 @@ import { parseDBError } from "../middleware/dbErrorHandler.js";
 import { AppError } from "../middleware/errorHandler.js";
 
 import { 
+    cookieOptions,
     generateRefreshToken, 
     generateToken, 
     hashPw 
 } from "../utils/authUtils.js";
 
-const cookieOptions = {
-    httpOnly: true,
-    sameSite: "strict" as const,
-};
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
