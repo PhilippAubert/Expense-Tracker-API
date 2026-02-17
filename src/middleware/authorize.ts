@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 
 import type { Request, Response, NextFunction } from "express";
-import type { JwtUserPayload } from "../types/userType.js";
+import type { JwtUserPayload } from "../types/userTypes.js";
 
 import { JWT_SECRET } from "../env.js";
 import { AppError } from "./errorHandler.js";

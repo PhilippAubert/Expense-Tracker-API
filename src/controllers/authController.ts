@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import type { Request, Response, NextFunction } from "express";
-import type { JwtUserPayload } from "../types/userType.js";
+import type { JwtUserPayload } from "../types/userTypes.js";
 
 import { JWT_SECRET_REFRESH } from "../env.js";
 
@@ -17,15 +17,12 @@ import { parseDBError } from "../middleware/dbErrorHandler.js";
 import { AppError } from "../middleware/errorHandler.js";
 
 import { 
+    cookieOptions,
     generateRefreshToken, 
     generateToken, 
     hashPw 
 } from "../utils/authUtils.js";
 
-const cookieOptions = {
-    httpOnly: true,
-    sameSite: "strict" as const,
-};
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {

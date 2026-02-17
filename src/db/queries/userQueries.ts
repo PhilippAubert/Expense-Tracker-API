@@ -3,7 +3,7 @@ import type {
     RowDataPacket 
 } from "mysql2";
 
-import type { User } from "../../types/userType.js";
+import type { User } from "../../types/userTypes.js";
 
 import { pool } from "../connection.js";
 
