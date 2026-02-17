@@ -1,6 +1,8 @@
 export type Expenses = Array<Expense>
 
 export type Expense = {
+    id: number,
+    userId: number;
     title: string,
     category: Category,
     expense: number
@@ -18,4 +20,4 @@ enum Category {
     Utilities = "utilities",
     Clothing = "clothing",
     Others = "others"
-  }
+}

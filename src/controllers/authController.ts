@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import type { Request, Response, NextFunction } from "express";
-import type { JwtUserPayload } from "../types/userType.js";
+import type { JwtUserPayload } from "../types/userTypes.js";
 
 import { JWT_SECRET_REFRESH } from "../env.js";
 
