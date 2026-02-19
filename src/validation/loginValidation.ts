@@ -1,16 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import { body, validationResult, type ValidationChain } from "express-validator";
+import { body, type ValidationChain } from "express-validator";
 
-import { AppError } from "../middleware/errorHandler.js";
-
-export const validate = (req: Request, _res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const msg = errors.array().map(err => err.msg).join(", ");
-        return next(new AppError(msg, 400));
-    }
-    return next();
-};
+import { validate } from "../middleware/validation.js";
 
 export const signupValidator:(ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
     body("name")
