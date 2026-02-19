@@ -36,10 +36,11 @@ export const getExpenseById = async (expenseId: number, userId: number): Promise
     return rows[0] as Expense;
 };
 
-export const updateExpenseToDb = async (expenseId: number, userId: number, data: Partial<Expense>) => {
+export const updateExpenseToDb = async (expenseId: number, userId: number, data: CreateExpenseInput) => {
+    const { title, category, expense } = data;
     const [result] = await pool.query<ResultSetHeader>(
         "UPDATE expenses SET title = ?, category = ?, expense = ? WHERE id = ? AND userId = ?",
-        [data.title, data.category, data.expense, expenseId, userId]
+        [title, category, expense, expenseId, userId]
     );
     
     return result.affectedRows > 0;
@@ -50,7 +51,6 @@ export const deleteExpenseFromDb = async (expenseId: number, userId: number) => 
         "DELETE FROM expenses WHERE id = ? AND userId = ?",
         [expenseId, userId]
     );
-    
     return result.affectedRows > 0;
 };
 

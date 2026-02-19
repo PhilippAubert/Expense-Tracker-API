@@ -31,7 +31,8 @@ export const listExpenses = async (req:Request, res:Response, next:NextFunction)
 export const getOneExpense = async (req:Request, res: Response, next:NextFunction) => {
     try {
         const {id} = req.params;
-        const userId = req.user?.id;
+        const user = req.user as JwtUserPayload; 
+        const userId = user["id"];
         const expense = await getExpenseById(Number(id), userId);
         res.status(200).json({"expense": expense});
     } catch (e) {
@@ -44,7 +45,7 @@ export const getOneExpense = async (req:Request, res: Response, next:NextFunctio
 export const addExpense = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.user as JwtUserPayload; 
-        const userId = user.userId;
+        const userId = user["id"];
         const insertId = await addExpenseToDb(userId, req.body);
         res.status(201).json({
             id: insertId,
@@ -58,12 +59,13 @@ export const addExpense = async (req: Request, res: Response, next: NextFunction
     }
 }
 
-export const deleteExpense = async (req:Request, res: Response, next:NextFunction) => {
+export const deleteExpense = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {id} = req.params;
-        const {userId} = req.user as JwtUserPayload; 
-        const deletedExpense = await deleteExpenseFromDb(Number(id), userId)
-        res.status(204).json(`${deletedExpense} deleted!`);
+        const { id } = req.params;
+        const user = req.user as JwtUserPayload; 
+        const userId = user["id"];
+        await deleteExpenseFromDb(Number(id), userId);
+        return res.status(204).end(); 
     } catch (e) {
         const dbError = parseDBError(e);
         if (dbError) return next(dbError);
@@ -71,12 +73,12 @@ export const deleteExpense = async (req:Request, res: Response, next:NextFunctio
     }
 }
 
-export const updateExpense = async (req:Request, res: Response, next:NextFunction) => {
+export const updateExpense = async (req:Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const { userId } = req.user as JwtUserPayload; 
-        const { body } = req.body;
-        const updatedExpense = updateExpenseToDb(Number(id), userId, body);
+        const user = req.user as JwtUserPayload; 
+        const userId = user["id"];
+        const updatedExpense = await updateExpenseToDb(Number(id), userId, req.body);
         res.status(201).json({"updated": updatedExpense});
     } catch (e) {
         const dbError = parseDBError(e);
