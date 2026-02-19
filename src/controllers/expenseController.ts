@@ -15,11 +15,18 @@ import {
 } from "../db/queries/expenseQueries.js";
 
 import { parseDBError } from "../middleware/dbErrorHandler.js";
+import { calculateDateRange } from "../utils/dateUtils.js";
 
 export const listExpenses = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const userId = req.user?.id;
-        const allExpenses = await getAllExpenses(userId);
+        const { filter, start, end } = req.query;
+        const { startDate, endDate } = calculateDateRange(
+            filter as string, 
+            start as string, 
+            end as string
+        );
+        const allExpenses = await getAllExpenses(userId, startDate, endDate);
         res.status(200).json({"expenses": allExpenses});
     } catch (e) {
         const dbError = parseDBError(e);

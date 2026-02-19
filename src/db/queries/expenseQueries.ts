@@ -18,11 +18,21 @@ export const addExpenseToDb = async (userId: number, expenseData: CreateExpenseI
     return result.insertId;
 };
 
-export const getAllExpenses = async (userId: number): Promise<Expense[]> => {
-    const [rows] = await pool.query<RowDataPacket[]>(
-        "SELECT * FROM expenses WHERE userId = ?",
-        [userId]
-    );
+export const getAllExpenses = async (userId: number, startDate?: string, endDate?: string): Promise<Expense[]> => {
+    let query = "SELECT * FROM expenses WHERE userId = ?";
+    const params: any[] = [userId];
+
+    if (startDate && endDate) {
+        query += " AND createdAt BETWEEN ? AND ?";
+        params.push(startDate, endDate);
+    } else if (startDate) {
+        query += " AND createdAt >= ?";
+        params.push(startDate);
+    }
+
+    query += " ORDER BY createdAt DESC";
+
+    const [rows] = await pool.query<RowDataPacket[]>(query, params);
     return rows as Expense[];
 };
 
